@@ -73,51 +73,31 @@ export function sortElementAttributes(template) {
   function sortAttributes(node) {
     if (node.nodeType !== 1) return
 
-    const attributes = Object.keys(node.attribs).map((key) => {
-      return { name: key, value: node.attribs[key] }
-    })
-    const sortedAttributes = []
+    const sortedAttributes = Object.keys(node.attribs)
+      .map((key) => ({ name: key, value: node.attribs[key] }))
+      .sort((a, b) => {
+        const indexA = elementAttributeSorting.indexOf(a.name)
+        const indexB = elementAttributeSorting.indexOf(b.name)
+        return indexA - indexB || (indexA === -1 ? 1 : -1)
+      })
 
-    attributes.forEach((attr) => {
-      delete node.attribs[attr.name]
-      sortedAttributes.push([attr.name, attr.value])
-    })
+    node.attribs = {}
 
-    sortedAttributes.sort((a, b) => {
-      const indexA = elementAttributeSorting.indexOf(a[0])
-      const indexB = elementAttributeSorting.indexOf(b[0])
-
-      if (indexA === -1 && indexB === -1) return 0
-      if (indexA === -1) return 1
-      if (indexB === -1) return -1
-
-      return indexA - indexB
-    })
-
-    sortedAttributes.forEach(([name, value]) => {
-      // Behalte die Vue-spezifische Syntax bei
+    sortedAttributes.forEach(({ name, value }) => {
+      // Handle Vue-specific syntax
       if (name.startsWith("@")) {
         node.attribs[name.replace(/^[@:]/, "v-on:")] = value
-        // console.log('name', name)
-        // console.log('value', value)
-        // } else if (name.startsWith('v-') || name.startsWith(':')) {
-        //   element.attribs[name] = value
       } else if (name.startsWith("v-slot")) {
-        const valueAddon = `="${value}"`
-        let t_value = name.replace("v-slot:", "")
-        if (value) t_value += valueAddon
-        const t_name = "temp-v-slot"
-        node.attribs[t_name] = t_value
+        node.attribs["temp-v-slot"] =
+          name.replace("v-slot:", "") + (value ? `="${value}"` : "")
       } else if (name.startsWith("#")) {
-        const t_value = name.replace("#", "")
-        const t_name = "temp-slot"
-        node.attribs[t_name] = t_value
+        node.attribs["temp-slot"] = name.slice(1)
       } else {
         node.attribs[name] = value
       }
     })
 
-    // Rekursiv für Kinder durchlaufen
+    // Recursively sort child nodes
     if (node.children) {
       node.children.forEach(sortAttributes)
     }
@@ -125,8 +105,6 @@ export function sortElementAttributes(template) {
 
   // Durchlaufe das DOM und modifiziere es
   dom.forEach(sortAttributes)
-
-  // sortAttributes(doc.window.document.body)
 
   // Serialisiere das modifizierte DOM zurück zu HTML
   const templateResult = render(dom, {
