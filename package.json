@@ -28,5 +28,9 @@
     "Vue",
     "web development",
     "workflow optimization"
-  ]
+  ],
+  "dependencies": {
+    "dom-serializer": "^2.0.0",
+    "htmlparser2": "^9.1.0"
+  }
 }

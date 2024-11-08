@@ -1,25 +1,41 @@
-import fsp from 'fs/promises'
-import path from 'path'
-import * as htmlparser2 from 'htmlparser2'
-import { DomHandler } from 'htmlparser2'
-import render from 'dom-serializer'
+import render from "dom-serializer"
+import { readFileSync } from "fs"
+import fsp from "fs/promises"
+import * as htmlparser2 from "htmlparser2"
+import { DomHandler } from "htmlparser2"
+import path from "path"
 
 const showLogFolders = false
 const showLogFiles = true
 
+// Navigate to the root directory of the project
+let projectRoot = process.cwd().split("node_modules")[0]
+if (projectRoot.endsWith("/")) {
+  projectRoot = projectRoot.slice(0, -1)
+}
+
 // Get grouping settings
 let elementAttributeSorting = null
 try {
-  elementAttributeSorting = JSON.parse(readFileSync(projectRoot + '/sorting.tmporg.json'))
-} catch {
+  elementAttributeSorting = JSON.parse(
+    readFileSync(projectRoot + "/sorting.tmporg.json")
+  )
+} catch (err1) {
   try {
-    elementAttributeSorting = JSON.parse(readFileSync('./sorting.json'))
-  } catch {
-    console.log('\x1b[47m\x1b[31m# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #')
-    console.error('# Could not load sorting file.                             #')
-    console.error('# Please add a valid sorting.tmporg.json                   #')
-    console.log('# Add the file to your root folder: ./sorting.tmporg.json  #')
-    console.log('# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #\x1b[0m')
+    elementAttributeSorting = JSON.parse(readFileSync("./sorting.json"))
+    console.log("elementAttributeSorting", elementAttributeSorting)
+  } catch (err2) {
+    console.log("err1", err1)
+    console.log("err2", err2)
+    console.log(
+      "\x1b[47m\x1b[31m# # # # # # # # # # # # # # # # # # # # # # # # # # # # # #"
+    )
+    console.error("# Could not load sorting file.                            #")
+    console.error("# Please add a valid sorting.tmporg.json                  #")
+    console.log("# Add the file to your root folder: ./sorting.tmporg.json #")
+    console.log(
+      "# # # # # # # # # # # # # # # # # # # # # # # # # # # # # #\x1b[0m"
+    )
     process.exit(0)
   }
 }
@@ -33,7 +49,7 @@ export function sortElementAttributes(template) {
     lowerCaseTags: false,
     lowerCaseAttributeNames: false,
     recognizeSelfClosing: true,
-    decodeEntities: false
+    decodeEntities: false,
   })
   parser.write(template)
   parser.end()
@@ -67,21 +83,21 @@ export function sortElementAttributes(template) {
 
     sortedAttributes.forEach(([name, value]) => {
       // Behalte die Vue-spezifische Syntax bei
-      if (name.startsWith('@')) {
-        node.attribs[name.replace(/^[@:]/, 'v-on:')] = value
+      if (name.startsWith("@")) {
+        node.attribs[name.replace(/^[@:]/, "v-on:")] = value
         // console.log('name', name)
         // console.log('value', value)
         // } else if (name.startsWith('v-') || name.startsWith(':')) {
         //   element.attribs[name] = value
-      } else if (name.startsWith('v-slot')) {
+      } else if (name.startsWith("v-slot")) {
         const valueAddon = `="${value}"`
-        let t_value = name.replace('v-slot:', '')
+        let t_value = name.replace("v-slot:", "")
         if (value) t_value += valueAddon
-        const t_name = 'temp-v-slot'
+        const t_name = "temp-v-slot"
         node.attribs[t_name] = t_value
-      } else if (name.startsWith('#')) {
-        const t_value = name.replace('#', '')
-        const t_name = 'temp-slot'
+      } else if (name.startsWith("#")) {
+        const t_value = name.replace("#", "")
+        const t_name = "temp-slot"
         node.attribs[t_name] = t_value
       } else {
         node.attribs[name] = value
@@ -104,10 +120,10 @@ export function sortElementAttributes(template) {
     selfClosingTags: true,
     emptyAttrs: false,
     encodeEntities: false,
-    decodeEntities: false
+    decodeEntities: false,
   })
 
-  const cleanVOn = templateResult.replace(/v-on:/g, '@')
+  const cleanVOn = templateResult.replace(/v-on:/g, "@")
   const replacedTempSlot = replaceTempSlot(cleanVOn)
   const replacedTempVSlot = replaceTempVSlot(replacedTempSlot)
   return replaceTempQuote(replacedTempVSlot)
@@ -138,17 +154,17 @@ function replaceTempVSlot(input) {
   })
 }
 
-async function replaceTemplateInVueSFC(filePath, vueFileName = 'xyz.vue') {
+async function replaceTemplateInVueSFC(filePath, vueFileName = "xyz.vue") {
   try {
     // Read the current content of the Vue file
-    let htmlContent = await fsp.readFile(filePath, 'utf-8')
+    let htmlContent = await fsp.readFile(filePath, "utf-8")
 
     // Search for the <template> tag
-    const templateStart = htmlContent.search('<template>')
+    const templateStart = htmlContent.search("<template>")
     if (templateStart === -1) return
-    const templateStartString = htmlContent.match('<template>')[0]
+    const templateStartString = htmlContent.match("<template>")[0]
     const templateStartStringLength = templateStartString.length
-    const templateEnd = htmlContent.lastIndexOf('</template>')
+    const templateEnd = htmlContent.lastIndexOf("</template>")
 
     // Check if <template> was found
     if (templateStart !== -1 && templateEnd !== -1) {
@@ -159,7 +175,8 @@ async function replaceTemplateInVueSFC(filePath, vueFileName = 'xyz.vue') {
       )
 
       // Sort the template content
-      const sortedTemplateContent = '\n' + sortElementAttributes(templateContent) + '\n'
+      const sortedTemplateContent =
+        "\n" + sortElementAttributes(templateContent) + "\n"
 
       // Replace the current content of the <template> tag with the new content
       htmlContent =
@@ -168,15 +185,20 @@ async function replaceTemplateInVueSFC(filePath, vueFileName = 'xyz.vue') {
         htmlContent.substring(templateEnd)
 
       // Write the updated content back to the file
-      await fsp.writeFile(filePath, htmlContent, 'utf-8')
+      await fsp.writeFile(filePath, htmlContent, "utf-8")
 
-      if (showLogFiles) console.log('--> File \x1b[33m' + vueFileName + '\x1b[0m has been edited')
+      if (showLogFiles)
+        console.log(
+          "--> File \x1b[33m" + vueFileName + "\x1b[0m has been edited"
+        )
     } else {
       // <template> not found
-      console.error('\x1b[31mThe content of ' + vueFileName + ' was not found.\x1b[0m')
+      console.error(
+        "\x1b[31mThe content of " + vueFileName + " was not found.\x1b[0m"
+      )
     }
   } catch (error) {
-    console.error('Error updating the file ' + vueFileName, error.message)
+    console.error("Error updating the file " + vueFileName, error.message)
   }
 }
 
@@ -186,7 +208,9 @@ export async function processAllVueFiles(folderPath) {
     const fileNames = await fsp.readdir(folderPath)
 
     // Filter only files with the extension ".vue"
-    const vueFiles = fileNames.filter((fileName) => path.extname(fileName) === '.vue')
+    const vueFiles = fileNames.filter(
+      (fileName) => path.extname(fileName) === ".vue"
+    )
 
     // Process each Vue file in the current folder
     for (const vueFile of vueFiles) {
@@ -205,10 +229,16 @@ export async function processAllVueFiles(folderPath) {
       }
     }
     if (showLogFolders) {
-      console.log(`====> Folder \x1b[33m${folderPath}\x1b[0m has been processed.`)
-      console.log(`- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - `)
+      console.log(
+        `====> Folder \x1b[33m${folderPath}\x1b[0m has been processed.`
+      )
+      console.log(
+        `- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - `
+      )
     }
   } catch (error) {
-    console.error('\x1b[31mError processing Vue files:\x1b[0m', error.message)
+    console.error("\x1b[31mError processing Vue files:\x1b[0m", error.message)
   }
 }
+
+processAllVueFiles(".")
