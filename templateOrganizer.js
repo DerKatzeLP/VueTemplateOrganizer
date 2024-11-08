@@ -16,7 +16,7 @@ if (projectRoot.endsWith("/")) {
   projectRoot = projectRoot.slice(0, -1)
 }
 
-// Get sorting settings
+// Load sorting settings
 async function loadSortingSettings() {
   const files = [`${projectRoot}/sorting.tmporg.json`, "sorting.json"]
 
@@ -24,7 +24,7 @@ async function loadSortingSettings() {
     try {
       return JSON.parse(await fsp.readFile(file))
     } catch (err) {
-      if (idx == 0) {
+      if (idx === 0) {
         console.log(
           "\x1b[47m\x1b[31m# # # # # # # # # # # # # # # # # # # # # # # # # # # # # #"
         )
@@ -41,7 +41,8 @@ async function loadSortingSettings() {
           "# Add the file to your root folder: ./sorting.tmporg.json #"
         )
         console.log(
-          "# # # # # # # # # # # # # # # # # # # # # # # # # # # # # #\x1b[0m"
+          "# # # # # # # # # # # # # # # # # # # # # # # # # # # # # #" +
+            "\x1b[0m"
         )
       }
     }
@@ -54,9 +55,7 @@ async function loadSortingSettings() {
 let elementAttributeSorting = await loadSortingSettings()
 
 export function sortElementAttributes(template) {
-  // const doc = new jsdom.JSDOM(template)
-
-  // Parse das HTML
+  // Parse the HTML
   const handler = new DomHandler()
   const parser = new htmlparser2.Parser(handler, {
     lowerCaseTags: false,
@@ -64,10 +63,11 @@ export function sortElementAttributes(template) {
     recognizeSelfClosing: true,
     decodeEntities: false,
   })
+
   parser.write(template)
   parser.end()
 
-  // Erhalte das DOM
+  // Get the DOM
   const dom = handler.dom
 
   function sortAttributes(node) {
@@ -103,10 +103,10 @@ export function sortElementAttributes(template) {
     }
   }
 
-  // Durchlaufe das DOM und modifiziere es
+  // Traverse the DOM and modify it
   dom.forEach(sortAttributes)
 
-  // Serialisiere das modifizierte DOM zurück zu HTML
+  // Serialize the modified DOM back to HTML
   const templateResult = render(dom, {
     selfClosingTags: true,
     emptyAttrs: false,
@@ -117,29 +117,20 @@ export function sortElementAttributes(template) {
   const cleanVOn = templateResult.replace(/v-on:/g, "@")
   const replacedTempSlot = replaceTempSlot(cleanVOn)
   const replacedTempVSlot = replaceTempVSlot(replacedTempSlot)
+
   return replaceTempQuote(replacedTempVSlot)
 }
 
 function replaceTempQuote(input) {
-  const result = input
-
-  return result.replace(QUOTE_REGEX, '"')
+  return input.replace(QUOTE_REGEX, '"')
 }
 
 function replaceTempSlot(input) {
-  const result = input
-
-  return result.replace(SLOT_REGEX, (_match, p1) => {
-    return `#${p1}`
-  })
+  return input.replace(SLOT_REGEX, (_match, p1) => `#${p1}`)
 }
 
 function replaceTempVSlot(input) {
-  const result = input
-
-  return result.replace(SLOT_REGEX, (_match, p1) => {
-    return `v-slot:${p1}`
-  })
+  return input.replace(SLOT_REGEX, (_match, p1) => `v-slot:${p1}`)
 }
 
 async function replaceTemplateInVueSFC(filePath, vueFileName = "xyz.vue") {
@@ -149,9 +140,10 @@ async function replaceTemplateInVueSFC(filePath, vueFileName = "xyz.vue") {
 
     // Search for the <template> tag
     const templateStart = htmlContent.search("<template>")
+
     if (templateStart === -1) return
-    const templateStartString = htmlContent.match("<template>")[0]
-    const templateStartStringLength = templateStartString.length
+
+    const templateStartStringLength = "<template>".length
     const templateEnd = htmlContent.lastIndexOf("</template>")
 
     // Check if <template> was found
@@ -213,9 +205,10 @@ export async function processAllVueFiles(folderPath) {
 
       if (stats.isDirectory()) {
         // Recursively process subfolders
-        processAllVueFiles(filePath)
+        await processAllVueFiles(filePath) // Await here to ensure proper async handling.
       }
     }
+
     if (showLogFolders) {
       console.log(
         `====> Folder \x1b[33m${folderPath}\x1b[0m has been processed.`
@@ -229,4 +222,5 @@ export async function processAllVueFiles(folderPath) {
   }
 }
 
+// Start processing Vue files in the current directory.
 await processAllVueFiles(".")
