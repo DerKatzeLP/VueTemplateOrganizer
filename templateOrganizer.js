@@ -7,6 +7,9 @@ import path from "path"
 const showLogFolders = false
 const showLogFiles = true
 
+const QUOTE_REGEX = /&quot;/g
+const SLOT_REGEX = /temp-slot="([^"]*)"/g
+
 // Navigate to the root directory of the project
 let projectRoot = process.cwd().split("node_modules")[0]
 if (projectRoot.endsWith("/")) {
@@ -141,25 +144,22 @@ export function sortElementAttributes(template) {
 
 function replaceTempQuote(input) {
   const result = input
-  const regex = /&quot;/g
 
-  return result.replace(regex, '"')
+  return result.replace(QUOTE_REGEX, '"')
 }
 
 function replaceTempSlot(input) {
   const result = input
-  const regex = /temp-slot="([^"]*)"/g
 
-  return result.replace(regex, (_match, p1) => {
+  return result.replace(SLOT_REGEX, (_match, p1) => {
     return `#${p1}`
   })
 }
 
 function replaceTempVSlot(input) {
   const result = input
-  const regex = /temp-v-slot="([^"]*)"/g
 
-  return result.replace(regex, (_match, p1) => {
+  return result.replace(SLOT_REGEX, (_match, p1) => {
     return `v-slot:${p1}`
   })
 }
@@ -251,4 +251,4 @@ export async function processAllVueFiles(folderPath) {
   }
 }
 
-processAllVueFiles(".")
+await processAllVueFiles(".")
