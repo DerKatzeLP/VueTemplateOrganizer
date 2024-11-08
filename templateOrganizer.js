@@ -4,9 +4,6 @@ import * as htmlparser2 from "htmlparser2"
 import { DomHandler } from "htmlparser2"
 import path from "path"
 
-const showLogFolders = false
-const showLogFiles = true
-
 const QUOTE_REGEX = /&quot;/g
 const SLOT_REGEX = /temp-slot="([^"]*)"/g
 
@@ -53,6 +50,44 @@ async function loadSortingSettings() {
 }
 
 let elementAttributeSorting = await loadSortingSettings()
+
+// Load config settings
+async function loadConfigSettings() {
+  const files = [`${projectRoot}/config.tmporg.json`, "config.json"]
+
+  for (const [idx, file] of files.entries()) {
+    try {
+      return JSON.parse(await fsp.readFile(file))
+    } catch (err) {
+      if (idx === 0) {
+        console.log(
+          "\x1b[47m\x1b[31m# # # # # # # # # # # # # # # # # # # # # # # # # # # # # #"
+        )
+        console.error(
+          "# Could not load config file.                             #"
+        )
+        console.error(
+          "# Trying to use fallback config.json                      #"
+        )
+        console.error(
+          "# Please add a valid config.tmporg.json                   #"
+        )
+        console.log(
+          "# Add the file to your root folder: ./config.tmporg.json  #"
+        )
+        console.log(
+          "# # # # # # # # # # # # # # # # # # # # # # # # # # # # # #" +
+            "\x1b[0m"
+        )
+      }
+    }
+  }
+  throw new Error(
+    "Could not load sorting file. Please add a valid sorting.tmporg.json"
+  )
+}
+
+let config = await loadConfigSettings()
 
 export function sortElementAttributes(template) {
   // Parse the HTML
@@ -167,7 +202,7 @@ async function replaceTemplateInVueSFC(filePath, vueFileName = "xyz.vue") {
       // Write the updated content back to the file
       await fsp.writeFile(filePath, htmlContent, "utf-8")
 
-      if (showLogFiles)
+      if (config.showLogFiles)
         console.log(
           "--> File \x1b[33m" + vueFileName + "\x1b[0m has been edited"
         )
@@ -209,7 +244,7 @@ export async function processAllVueFiles(folderPath) {
       }
     }
 
-    if (showLogFolders) {
+    if (config.showLogFolders) {
       console.log(
         `====> Folder \x1b[33m${folderPath}\x1b[0m has been processed.`
       )
