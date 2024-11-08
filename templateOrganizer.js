@@ -1,5 +1,4 @@
 import render from "dom-serializer"
-import { readFileSync } from "fs"
 import fsp from "fs/promises"
 import * as htmlparser2 from "htmlparser2"
 import { DomHandler } from "htmlparser2"
@@ -14,28 +13,42 @@ if (projectRoot.endsWith("/")) {
   projectRoot = projectRoot.slice(0, -1)
 }
 
-// Get grouping settings
-let elementAttributeSorting = null
-try {
-  elementAttributeSorting = JSON.parse(
-    readFileSync(projectRoot + "/sorting.tmporg.json")
-  )
-} catch (err1) {
-  try {
-    elementAttributeSorting = JSON.parse(readFileSync("./sorting.json"))
-  } catch (err2) {
-    console.log(
-      "\x1b[47m\x1b[31m# # # # # # # # # # # # # # # # # # # # # # # # # # # # # #"
-    )
-    console.error("# Could not load sorting file.                            #")
-    console.error("# Please add a valid sorting.tmporg.json                  #")
-    console.log("# Add the file to your root folder: ./sorting.tmporg.json #")
-    console.log(
-      "# # # # # # # # # # # # # # # # # # # # # # # # # # # # # #\x1b[0m"
-    )
-    process.exit(0)
+// Get sorting settings
+async function loadSortingSettings() {
+  const files = [`${projectRoot}/sorting.tmporg.json`, "sorting.json"]
+
+  for (const [idx, file] of files.entries()) {
+    try {
+      return JSON.parse(await fsp.readFile(file))
+    } catch (err) {
+      if (idx == 0) {
+        console.log(
+          "\x1b[47m\x1b[31m# # # # # # # # # # # # # # # # # # # # # # # # # # # # # #"
+        )
+        console.error(
+          "# Could not load sorting file.                            #"
+        )
+        console.error(
+          "# Trying to use fallback sorting.json                     #"
+        )
+        console.error(
+          "# Please add a valid sorting.tmporg.json                  #"
+        )
+        console.log(
+          "# Add the file to your root folder: ./sorting.tmporg.json #"
+        )
+        console.log(
+          "# # # # # # # # # # # # # # # # # # # # # # # # # # # # # #\x1b[0m"
+        )
+      }
+    }
   }
+  throw new Error(
+    "Could not load sorting file. Please add a valid sorting.tmporg.json"
+  )
 }
+
+let elementAttributeSorting = await loadSortingSettings()
 
 export function sortElementAttributes(template) {
   // const doc = new jsdom.JSDOM(template)
