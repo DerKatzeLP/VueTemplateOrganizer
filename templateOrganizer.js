@@ -23,10 +23,7 @@ try {
 } catch (err1) {
   try {
     elementAttributeSorting = JSON.parse(readFileSync("./sorting.json"))
-    console.log("elementAttributeSorting", elementAttributeSorting)
   } catch (err2) {
-    console.log("err1", err1)
-    console.log("err2", err2)
     console.log(
       "\x1b[47m\x1b[31m# # # # # # # # # # # # # # # # # # # # # # # # # # # # # #"
     )
