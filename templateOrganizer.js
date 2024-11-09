@@ -90,6 +90,7 @@ async function loadConfigSettings() {
 let config = await loadConfigSettings()
 
 export function sortElementAttributes(template) {
+  if (!config.sortVueFiles) return template
   // Parse the HTML
   const handler = new DomHandler()
   const parser = new htmlparser2.Parser(handler, {
