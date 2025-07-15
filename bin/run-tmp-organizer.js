@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 
-import { execSync } from "child_process"
-import { fileURLToPath } from "url"
-import { dirname, join } from "path"
+import {execSync} from "child_process"
+import {fileURLToPath} from "url"
+import {dirname, join} from "path"
 
 // Constants
 const SCRIPT_COMMAND = "npm run sort"
