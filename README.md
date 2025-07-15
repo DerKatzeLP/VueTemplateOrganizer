@@ -1,11 +1,13 @@
 # VueTemplateOrganizer
 
-VueTemplateOrganizer is a tool that allows you to configure the sorting of CSS style blocks in both CSS files and Vue Single File Components (SFCs).
+VueTemplateOrganizer is a tool that allows you to configure the sorting of CSS style blocks in both CSS files and Vue
+Single File Components (SFCs).
 
 ## Features
 
 - **Configurable Sorting:** Customize the sorting of CSS style blocks to fit your specific needs.
-- **Support for CSS Files and Vue SFCs:** Use VueTemplateOrganizer with traditional CSS files and Vue Single File Components.
+- **Support for CSS Files and Vue SFCs:** Use VueTemplateOrganizer with traditional CSS files and Vue Single File
+  Components.
 
 ## Not supported yet
 
@@ -38,7 +40,7 @@ VueTemplateOrganizer will sort all properties by this given order.
 ### Options
 
 | Key              | Values  | Default  | Description                                               |
-| ---------------- | ------- | -------- | --------------------------------------------------------- |
+|------------------|---------|----------|-----------------------------------------------------------|
 | `showLogFiles`   | Boolean | `true`   | Enables or disables log report of touched Files           |
 | `showLogFolders` | Boolean | `true`   | Enables or disables log report of touched Folders         |
 | `sortVueFiles`   | Boolean | `true`   | Enables or disables sorting of Vue SFC Files              |
@@ -49,26 +51,28 @@ VueTemplateOrganizer will sort all properties by this given order.
 #### Before using VueTemplateOrganizer
 
 ```html
+
 <template>
-  <h1>Test Vue File for Vue Template Organizer</h1>
-  <CustomComp class="class1" @click="testfnc" :id="comp1Id" />
-  <CustomComp2 @click="testfnc" />
-  <p class="par">Just a simple Test</p>
-  <label for="txtinput">Your input here</label>
-  <input type="text" class="input-c" id="txtinput" ref="myRef" />
+    <h1>Test Vue File for Vue Template Organizer</h1>
+    <CustomComp class="class1" @click="testfnc" :id="comp1Id"/>
+    <CustomComp2 @click="testfnc"/>
+    <p class="par">Just a simple Test</p>
+    <label for="txtinput">Your input here</label>
+    <input type="text" class="input-c" id="txtinput" ref="myRef"/>
 </template>
 ```
 
 #### After using VueTemplateOrganizer
 
 ```html
+
 <template>
-  <h1>Test Vue File for Vue Template Organizer</h1>
-  <CustomComp :id="comp1Id" class="class1" @click="testfnc"></CustomComp>
-  <CustomComp2 @click="testfnc"></CustomComp2>
-  <p class="par">Just a simple Test</p>
-  <label for="txtinput">Your input here</label>
-  <input id="txtinput" class="input-c" type="text" ref="myRef" />
+    <h1>Test Vue File for Vue Template Organizer</h1>
+    <CustomComp :id="comp1Id" class="class1" @click="testfnc"></CustomComp>
+    <CustomComp2 @click="testfnc"></CustomComp2>
+    <p class="par">Just a simple Test</p>
+    <label for="txtinput">Your input here</label>
+    <input id="txtinput" class="input-c" type="text" ref="myRef"/>
 </template>
 ```
 
@@ -81,7 +85,8 @@ VueTemplateOrganizer relies on the following external library:
 
 ## Contributing
 
-If you'd like to contribute to VueTemplateOrganizer, please [contact](https://github.com/DerKatzeLP/VueTemplateOrganizer) me.
+If you'd like to contribute to VueTemplateOrganizer,
+please [contact](https://github.com/DerKatzeLP/VueTemplateOrganizer) me.
 
 ## License
 

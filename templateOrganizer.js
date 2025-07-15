@@ -41,6 +41,7 @@ async function loadSortingSettings() {
           "# # # # # # # # # # # # # # # # # # # # # # # # # # # # # #" +
             "\x1b[0m"
         )
+        console.log('')
       }
     }
   }
