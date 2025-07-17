@@ -1,13 +1,11 @@
 # VueTemplateOrganizer
 
-VueTemplateOrganizer is a tool that allows you to configure the sorting of CSS style blocks in both CSS files and Vue
-Single File Components (SFCs).
+VueTemplateOrganizer is a tool that allows you to configure the sorting of template blocks in Vue Single File Components (SFCs).
 
 ## Features
 
-- **Configurable Sorting:** Customize the sorting of CSS style blocks to fit your specific needs.
-- **Support for CSS Files and Vue SFCs:** Use VueTemplateOrganizer with traditional CSS files and Vue Single File
-  Components.
+- **Configurable Sorting:** Customize the sorting of template blocks to fit your specific needs.
+- **Support for Vue SFCs:** Use VueTemplateOrganizer with traditional Vue Single File Components.
 
 ## Not supported yet
 
@@ -20,7 +18,7 @@ Follow these steps to get started with VueTemplateOrganizer in your project.
 ### Installation
 
 ```bash
-npm install @derkatzelp/VueTemplateOrganizer --save-dev
+npm install @derkatzelp/vuetemplateorganizer --save-dev
 ```
 
 ### Usage
@@ -78,10 +76,10 @@ VueTemplateOrganizer will sort all properties by this given order.
 
 ## Dependencies
 
-VueTemplateOrganizer relies on the following external library:
+VueTemplateOrganizer relies on the following external libraries:
 
-- [dom-serializer](https://github.com/cheeriojs/dom-serializer)
-- [htmlparser2](https://github.com/fb55/htmlparser2)
+- [dom-serializer](https://github.com/cheeriojs/dom-serializer) - For DOM element serialization
+- [htmlparser2](https://github.com/fb55/htmlparser2) - For parsing HTML/Vue templates
 
 ## Contributing
 
@@ -94,4 +92,6 @@ This project is licensed under the [MIT License](LICENSE).
 
 ## Acknowledgments
 
-Give credit to any external libraries, tools, or individuals you'd like to acknowledge.
+Special thanks to:
+- The maintainers of dom-serializer and htmlparser2 for providing robust parsing tools
+- The Vue.js community for inspiration and support

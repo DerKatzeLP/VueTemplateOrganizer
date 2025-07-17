@@ -1,10 +1,10 @@
 <template>
   <h1>Test Vue File for Vue Template Organizer</h1>
-  <CustomComp class="class1" @click="testfnc" :id="comp1Id" />
-  <CustomComp2 @click="testfnc" />
+  <CustomComp :id="comp1Id" class="class1" @click="testfnc"></CustomComp>
+  <CustomComp2 @click="testfnc"></CustomComp2>
   <p class="par">Just a simple Test</p>
   <label for="txtinput">Your input here</label>
-  <input type="text" class="input-c" id="txtinput" ref="myRef" />
+  <input id="txtinput" class="input-c" type="text" ref="myRef" />
 </template>
 
 <script setup lang="ts">

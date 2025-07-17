@@ -1,6 +1,6 @@
 {
   "name": "@derkatzelp/vuetemplateorganizer",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "VueTemplateOrganizer is a tool that allows you to configure the sorting of Template blocks in Vue Single File Components (SFCs).",
   "main": "templateOrganizer.js",
   "type": "module",
@@ -10,7 +10,7 @@
     "access": "public"
   },
   "bin": {
-    "css-organizer": "bin/run-tmp-organizer.js"
+    "tmp-organizer": "bin/run-tmp-organizer.js"
   },
   "bugs": {
     "url": "https://github.com/DerKatzeLP/VueTemplateOrganizer/issues"
