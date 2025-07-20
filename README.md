@@ -29,11 +29,92 @@ npx tmp-organizer
 
 ## Configuration
 
+You can customize the sorting behavior by adjusting the configuration in `config.tmporg.json` and `sorting.tmporg.json`. <br>
+VueTemplateOrganizer will sort all properties by this given order.
+
+### Config
+```json
+// config.tmporg.json
+{
+  "showLogFiles": true,
+  "showLogFolders": false,
+  "sortVueFiles": true,
+  "vueFolderPath": "./src/"
+}
+```
+
 ### Sorting
 
-You can customize the sorting behavior by adjusting the configuration in `sorting.json`. <br>
-Each `group` has a `properties` section in which you can add your keys in a specific order.<br>
-VueTemplateOrganizer will sort all properties by this given order.
+```json
+// sorting.tmporg.json
+[
+  "v-if",
+  "v-else-if",
+  "v-else",
+  "v-show",
+  "v-for",
+  "v-model",
+  "v-bind",
+  "v-on",
+  "v-html",
+  "v-text",
+  "v-pre",
+  "v-once",
+  "v-cloak",
+  "id",
+  ":id",
+  "class",
+  "style",
+  "type",
+  "name",
+  "value",
+  "href",
+  "src",
+  "alt",
+  "title",
+  "placeholder",
+  "autocomplete",
+  "required",
+  "disabled",
+  "readonly",
+  "checked",
+  "selected",
+  "multiple",
+  "pattern",
+  "min",
+  "max",
+  "step",
+  "rows",
+  "cols",
+  "for",
+  "action",
+  "method",
+  "target",
+  "rel",
+  "role",
+  "aria-*",
+  "data-*",
+  ":*",
+  ":is",
+  ":class",
+  ":customProp",
+  "@*",
+  "@click",
+  "@input",
+  "@change",
+  "@submit",
+  "slot",
+  "slot-scope",
+  "ref",
+  "key",
+  "transition",
+  "transition-group",
+  "is",
+  "inline-template",
+  "custom-*"
+]
+
+```
 
 ### Options
 
