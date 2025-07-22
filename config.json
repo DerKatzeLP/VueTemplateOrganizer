@@ -2,5 +2,5 @@
   "showLogFiles": true,
   "showLogFolders": false,
   "sortVueFiles": true,
-  "vueFolderPath": "./src/"
+  "vueFolderPath": "/src/"
 }

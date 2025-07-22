@@ -29,7 +29,7 @@ const COLORS = {
 // Navigate to the root directory of the project
 let projectRoot = process.cwd().split("node_modules")[0]
 if (projectRoot.endsWith("/")) {
-  projectRoot = projectRoot.slice(0, -1)
+  projectRoot = projectRoot.slice(0, -1) + config.vueFolderPath.toString()
 }
 
 // Get grouping settings
