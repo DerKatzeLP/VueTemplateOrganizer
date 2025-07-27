@@ -196,11 +196,14 @@ function sortNodeAttributes(node) {
 function processAttribute(node, name, value) {
   if (name.startsWith("@")) {
     node.attribs[name.replace(/^[@:]/, "v-on:")] = value
-  } else if (name.startsWith("v-slot")) {
+  } else if (name.startsWith("v-slot:")) {
     node.attribs["temp-v-slot"] =
       name.replace("v-slot:", "") + (value ? `="${value}"` : "")
+  } else if (name.startsWith("v-slot=")) {
+    node.attribs["temp-v-slot"] =
+      name.replace("v-slot=", "") + (value ? `="${value}"` : "")
   } else if (name.startsWith("#")) {
-    node.attribs["temp-slot"] = name.slice(1)
+    node.attribs["temp-slot"] = name.slice(1) + (value ? `="${value}"` : "")
   } else {
     node.attribs[name] = value
   }
