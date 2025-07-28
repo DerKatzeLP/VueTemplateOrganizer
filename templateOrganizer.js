@@ -26,13 +26,10 @@ const COLORS = {
   RESET: "\x1b[0m",
 }
 
-// Navigate to the root directory of the project
-let projectRoot = process.cwd().split("node_modules")[0]
-if (projectRoot.endsWith("/")) {
-  projectRoot = projectRoot.slice(0, -1) + config.vueFolderPath.toString()
-}
-
-// Get grouping settings
+/**
+ * Initialize element attribute sorting.
+ * Loads sorting configuration from sorting.tmporg.json or sorting.json.
+ */
 let elementAttributeSorting = null
 try {
   elementAttributeSorting = JSON.parse(
@@ -59,7 +56,10 @@ try {
   }
 }
 
-// Get config
+/**
+ * Initialize configuration.
+ * Loads config from config.tmporg.json or config.json.
+ */
 let config = null
 try {
   config = JSON.parse(readFileSync(projectRoot + "/config.tmporg.json"))
@@ -81,7 +81,16 @@ try {
 }
 
 /**
- * Get the project root directory
+ * Navigate to the root directory of the project
+ */
+let projectRoot = process.cwd().split("node_modules")[0]
+if (projectRoot.endsWith("/")) {
+  projectRoot = projectRoot.slice(0, -1) + config.vueFolderPath.toString()
+}
+
+/**
+ * Returns the root directory of the project.
+ * @returns {string} Project root path
  */
 function getProjectRoot() {
   let root = process.cwd().split("node_modules")[0]
@@ -89,7 +98,10 @@ function getProjectRoot() {
 }
 
 /**
- * Load configuration files with fallback mechanism
+ * Loads configuration files with fallback mechanism.
+ * @param {string[]} fileNames - Array of possible config file names
+ * @param {string} configType - Type of configuration being loaded
+ * @returns {Promise<object>} Parsed configuration object
  */
 async function loadConfigFile(fileNames, configType) {
   const files = fileNames.map((name) => `${projectRoot}/${name}`)
@@ -110,7 +122,9 @@ async function loadConfigFile(fileNames, configType) {
 }
 
 /**
- * Log configuration error with formatted output
+ * Logs configuration error with formatted output.
+ * @param {string} configType - Type of configuration
+ * @param {string} fileName - Name of the config file
  */
 function logConfigError(configType, fileName) {
   const border = "# # # # # # # # # # # # # # # # # # # # # # # # # # # # # #"
@@ -140,7 +154,9 @@ function logConfigError(configType, fileName) {
 }
 
 /**
- * Parse HTML template with specific options
+ * Parses HTML template with specific options.
+ * @param {string} template - Template string to parse
+ * @returns {Object[]} Parsed DOM tree
  */
 function parseTemplate(template) {
   const handler = new DomHandler()
@@ -158,7 +174,9 @@ function parseTemplate(template) {
 }
 
 /**
- * Get attribute sort priority
+ * Gets attribute sort priority from configuration.
+ * @param {string} attributeName - Name of the attribute
+ * @returns {number} Sort priority (lower = higher priority)
  */
 function getAttributeSortPriority(attributeName) {
   const index = elementAttributeSorting.indexOf(attributeName)
@@ -166,7 +184,8 @@ function getAttributeSortPriority(attributeName) {
 }
 
 /**
- * Sort attributes according to configuration
+ * Sorts node attributes according to configuration.
+ * @param {Object} node - DOM node to process
  */
 function sortNodeAttributes(node) {
   if (node.nodeType !== NODE_TYPE_ELEMENT) return
@@ -191,7 +210,10 @@ function sortNodeAttributes(node) {
 }
 
 /**
- * Process individual attribute based on Vue-specific syntax
+ * Processes individual attribute based on Vue-specific syntax.
+ * @param {Object} node - DOM node
+ * @param {string} name - Attribute name
+ * @param {string} value - Attribute value
  */
 function processAttribute(node, name, value) {
   if (name.startsWith("@")) {
@@ -210,7 +232,9 @@ function processAttribute(node, name, value) {
 }
 
 /**
- * Apply post-processing replacements
+ * Applies post-processing replacements to template string.
+ * @param {string} template - Template to process
+ * @returns {string} Processed template
  */
 function applyPostProcessing(template) {
   return template
@@ -221,7 +245,9 @@ function applyPostProcessing(template) {
 }
 
 /**
- * Sort element attributes in template
+ * Sorts element attributes in template.
+ * @param {string} template - Template to sort
+ * @returns {string} Sorted template
  */
 export function sortElementAttributes(template) {
   if (!config.sortVueFiles) return template
@@ -240,7 +266,9 @@ export function sortElementAttributes(template) {
 }
 
 /**
- * Extract template content from Vue SFC
+ * Extracts template content from Vue SFC.
+ * @param {string} htmlContent - Vue file content
+ * @returns {Object|null} Template info or null if not found
  */
 function extractTemplateContent(htmlContent) {
   const templateStart = htmlContent.search(TEMPLATE_TAG_START)
@@ -259,7 +287,9 @@ function extractTemplateContent(htmlContent) {
 }
 
 /**
- * Replace template content in Vue SFC
+ * Replaces template content in Vue SFC.
+ * @param {string} filePath - Path to Vue file
+ * @param {string} vueFileName - Name of Vue file
  */
 async function replaceTemplateInVueSFC(filePath, vueFileName = "xyz.vue") {
   try {
@@ -293,7 +323,9 @@ async function replaceTemplateInVueSFC(filePath, vueFileName = "xyz.vue") {
 }
 
 /**
- * Process Vue files in a directory
+ * Processes Vue files in a directory.
+ * @param {string} folderPath - Path to process
+ * @returns {Promise<string[]>} List of file names
  */
 async function processVueFilesInDirectory(folderPath) {
   try {
@@ -319,7 +351,9 @@ async function processVueFilesInDirectory(folderPath) {
 }
 
 /**
- * Process subdirectories recursively
+ * Processes subdirectories recursively.
+ * @param {string} folderPath - Base folder path
+ * @param {string[]} fileNames - List of files to process
  */
 async function processSubdirectories(folderPath, fileNames) {
   for (const fileName of fileNames) {
@@ -337,7 +371,8 @@ async function processSubdirectories(folderPath, fileNames) {
 }
 
 /**
- * Process all Vue files in folder and subfolders
+ * Processes all Vue files in folder and subfolders.
+ * @param {string} folderPath - Base folder path
  */
 export async function processAllVueFiles(folderPath) {
   const fileNames = await processVueFilesInDirectory(folderPath)
@@ -353,6 +388,6 @@ export async function processAllVueFiles(folderPath) {
   }
 }
 
-// Start processing Vue files in the current directory
+// Initialize processing
 console.log("\x1b[33mPath to project root\x1b[0m", projectRoot)
 await processAllVueFiles(projectRoot)
