@@ -1,29 +1,29 @@
-import render from "dom-serializer"
-import { readFileSync } from "fs"
-import fsp from "fs/promises"
-import * as htmlparser2 from "htmlparser2"
-import { DomHandler } from "htmlparser2"
-import path from "path"
+import render from 'dom-serializer'
+import { readFileSync } from 'fs'
+import fsp from 'fs/promises'
+import * as htmlparser2 from 'htmlparser2'
+import { DomHandler } from 'htmlparser2'
+import path from 'path'
 
 // Constants
 const QUOTE_REGEX = /&quot;/g
 const SLOT_REGEX = /temp-slot="([^"]*)"/g
 const V_SLOT_REGEX = /temp-v-slot="([^"]*)"/g
-const TEMPLATE_TAG_START = "<template>"
-const TEMPLATE_TAG_END = "</template>"
-const VUE_FILE_EXTENSION = ".vue"
+const TEMPLATE_TAG_START = '<template>'
+const TEMPLATE_TAG_END = '</template>'
+const VUE_FILE_EXTENSION = '.vue'
 const NODE_TYPE_ELEMENT = 1
 
 // File paths
-const SORTING_FILES = ["sorting.tmporg.json", "sorting.json"]
-const CONFIG_FILES = ["config.tmporg.json", "config.json"]
+const SORTING_FILES = ['sorting.tmporg.json', 'sorting.json']
+const CONFIG_FILES = ['config.tmporg.json', 'config.json']
 
 // Colors for console output
 const COLORS = {
-  RED: "\x1b[31m",
-  YELLOW: "\x1b[33m",
-  WHITE_BG_RED: "\x1b[47m\x1b[31m",
-  RESET: "\x1b[0m",
+  RED: '\x1b[31m',
+  YELLOW: '\x1b[33m',
+  WHITE_BG_RED: '\x1b[47m\x1b[31m',
+  RESET: '\x1b[0m'
 }
 
 /**
@@ -32,26 +32,16 @@ const COLORS = {
  */
 let elementAttributeSorting = null
 try {
-  elementAttributeSorting = JSON.parse(
-    readFileSync(projectRoot + "/sorting.tmporg.json")
-  )
+  elementAttributeSorting = JSON.parse(readFileSync(projectRoot + '/sorting.tmporg.json'))
 } catch {
   try {
-    elementAttributeSorting = JSON.parse(readFileSync("./sorting.json"))
+    elementAttributeSorting = JSON.parse(readFileSync('./sorting.json'))
   } catch {
-    console.log(
-      "\x1b[47m\x1b[31m# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #"
-    )
-    console.error(
-      "# Could not load grouping file.                             #"
-    )
-    console.error(
-      "# Please add a valid grouping.tmporg.json                   #"
-    )
-    console.log("# Add the file to your root folder: ./sorting.tmporg.json  #")
-    console.log(
-      "# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #\x1b[0m"
-    )
+    console.log('\x1b[47m\x1b[31m# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #')
+    console.error('# Could not load grouping file.                             #')
+    console.error('# Please add a valid grouping.tmporg.json                   #')
+    console.log('# Add the file to your root folder: ./sorting.tmporg.json  #')
+    console.log('# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #\x1b[0m')
     process.exit(0)
   }
 }
@@ -62,20 +52,16 @@ try {
  */
 let config = null
 try {
-  config = JSON.parse(readFileSync(projectRoot + "/config.tmporg.json"))
+  config = JSON.parse(readFileSync(projectRoot + '/config.tmporg.json'))
 } catch {
   try {
-    config = JSON.parse(readFileSync("./config.json"))
+    config = JSON.parse(readFileSync('./config.json'))
   } catch {
-    console.log(
-      "\x1b[47m\x1b[31m# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #"
-    )
-    console.error("# Could not load config file.                             #")
-    console.error("# Please add a valid config.tmporg.json                   #")
-    console.log("# Add the file to your root folder: ./config.tmporg.json  #")
-    console.log(
-      "# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #\x1b[0m"
-    )
+    console.log('\x1b[47m\x1b[31m# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #')
+    console.error('# Could not load config file.                             #')
+    console.error('# Please add a valid config.tmporg.json                   #')
+    console.log('# Add the file to your root folder: ./config.tmporg.json  #')
+    console.log('# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #\x1b[0m')
     process.exit(0)
   }
 }
@@ -83,8 +69,8 @@ try {
 /**
  * Navigate to the root directory of the project
  */
-let projectRoot = process.cwd().split("node_modules")[0]
-if (projectRoot.endsWith("/")) {
+let projectRoot = process.cwd().split('node_modules')[0]
+if (projectRoot.endsWith('/')) {
   projectRoot = projectRoot.slice(0, -1) + config.vueFolderPath.toString()
 }
 
@@ -93,8 +79,8 @@ if (projectRoot.endsWith("/")) {
  * @returns {string} Project root path
  */
 function getProjectRoot() {
-  let root = process.cwd().split("node_modules")[0]
-  return root.endsWith("/") ? root.slice(0, -1) : root
+  let root = process.cwd().split('node_modules')[0]
+  return root.endsWith('/') ? root.slice(0, -1) : root
 }
 
 /**
@@ -116,9 +102,7 @@ async function loadConfigFile(fileNames, configType) {
     }
   }
 
-  throw new Error(
-    `Could not load ${configType} file. Please add a valid ${fileNames[0]}`
-  )
+  throw new Error(`Could not load ${configType} file. Please add a valid ${fileNames[0]}`)
 }
 
 /**
@@ -127,30 +111,24 @@ async function loadConfigFile(fileNames, configType) {
  * @param {string} fileName - Name of the config file
  */
 function logConfigError(configType, fileName) {
-  const border = "# # # # # # # # # # # # # # # # # # # # # # # # # # # # # #"
+  const border = '# # # # # # # # # # # # # # # # # # # # # # # # # # # # # #'
   console.log(`${COLORS.WHITE_BG_RED}${border}`)
   console.error(
-    `# Could not load ${configType} file.${" ".repeat(
-      Math.max(0, 35 - configType.length)
-    )}#`
+    `# Could not load ${configType} file.${' '.repeat(Math.max(0, 35 - configType.length))}#`
   )
   console.error(
-    `# Trying to use fallback ${fileName.split(".")[0]}.json${" ".repeat(
-      Math.max(0, 28 - fileName.split(".")[0].length)
+    `# Trying to use fallback ${fileName.split('.')[0]}.json${' '.repeat(
+      Math.max(0, 28 - fileName.split('.')[0].length)
     )}#`
   )
-  console.error(
-    `# Please add a valid ${fileName}${" ".repeat(
-      Math.max(0, 37 - fileName.length)
-    )}#`
-  )
+  console.error(`# Please add a valid ${fileName}${' '.repeat(Math.max(0, 37 - fileName.length))}#`)
   console.log(
-    `# Add the file to your root folder: ./${fileName}${" ".repeat(
+    `# Add the file to your root folder: ./${fileName}${' '.repeat(
       Math.max(0, 20 - fileName.length)
     )}#`
   )
   console.log(`${border}${COLORS.RESET}`)
-  console.log("")
+  console.log('')
 }
 
 /**
@@ -164,7 +142,7 @@ function parseTemplate(template) {
     lowerCaseTags: false,
     lowerCaseAttributeNames: false,
     recognizeSelfClosing: true,
-    decodeEntities: false,
+    decodeEntities: false
   })
 
   parser.write(template)
@@ -216,18 +194,17 @@ function sortNodeAttributes(node) {
  * @param {string} value - Attribute value
  */
 function processAttribute(node, name, value) {
-  if (name.startsWith("@")) {
-    node.attribs[name.replace(/^[@:]/, "v-on:")] = value
-  } else if (name.startsWith("v-slot:")) {
-    node.attribs["temp-v-slot"] =
-      name.replace("v-slot:", "") + (value ? `="${value}"` : "")
-  } else if (name.startsWith("v-slot=")) {
-    node.attribs["temp-v-slot"] =
-      name.replace("v-slot=", "") + (value ? `="${value}"` : "")
-  } else if (name.startsWith("#")) {
-    node.attribs["temp-slot"] = name.slice(1) + (value ? `="${value}"` : "")
+  if (name.startsWith('@')) {
+    node.attribs[name.replace(/^[@:]/, 'v-on:')] = value
+  } else if (name.startsWith('v-slot:')) {
+    node.attribs['temp-v-slot'] = name.replace('v-slot:', '') + (value ? `="${value}"` : '')
+  } else if (name.startsWith('v-slot=')) {
+    node.attribs['temp-v-slot'] = name.replace('v-slot=', '') + (value ? `="${value}"` : '')
+  } else if (name.startsWith('#')) {
+    node.attribs['temp-slot'] = name.slice(1) + (value ? `="${value}"` : '')
   } else {
-    node.attribs[name] = value
+    if (name.indexOf('v-else') > -1) return
+    else node.attribs[name] = value
   }
 }
 
@@ -238,7 +215,7 @@ function processAttribute(node, name, value) {
  */
 function applyPostProcessing(template) {
   return template
-    .replace(/v-on:/g, "@")
+    .replace(/v-on:/g, '@')
     .replace(SLOT_REGEX, (_match, p1) => `#${p1}`)
     .replace(V_SLOT_REGEX, (_match, p1) => `v-slot:${p1}`)
     .replace(QUOTE_REGEX, '"')
@@ -259,7 +236,7 @@ export function sortElementAttributes(template) {
     selfClosingTags: true,
     emptyAttrs: false,
     encodeEntities: false,
-    decodeEntities: false,
+    decodeEntities: false
   })
 
   return applyPostProcessing(templateResult)
@@ -282,7 +259,7 @@ function extractTemplateContent(htmlContent) {
   return {
     content: htmlContent.substring(contentStart, templateEnd),
     start: contentStart,
-    end: templateEnd,
+    end: templateEnd
   }
 }
 
@@ -291,9 +268,9 @@ function extractTemplateContent(htmlContent) {
  * @param {string} filePath - Path to Vue file
  * @param {string} vueFileName - Name of Vue file
  */
-async function replaceTemplateInVueSFC(filePath, vueFileName = "xyz.vue") {
+async function replaceTemplateInVueSFC(filePath, vueFileName = 'xyz.vue') {
   try {
-    let htmlContent = await fsp.readFile(filePath, "utf-8")
+    let htmlContent = await fsp.readFile(filePath, 'utf-8')
     const templateInfo = extractTemplateContent(htmlContent)
 
     if (!templateInfo) {
@@ -310,12 +287,10 @@ async function replaceTemplateInVueSFC(filePath, vueFileName = "xyz.vue") {
       sortedTemplateContent +
       htmlContent.substring(templateInfo.end)
 
-    await fsp.writeFile(filePath, htmlContent, "utf-8")
+    await fsp.writeFile(filePath, htmlContent, 'utf-8')
 
     if (config.showLogFiles) {
-      console.log(
-        `--> File ${COLORS.YELLOW}${vueFileName}${COLORS.RESET} has been edited`
-      )
+      console.log(`--> File ${COLORS.YELLOW}${vueFileName}${COLORS.RESET} has been edited`)
     }
   } catch (error) {
     console.error(`Error updating the file ${vueFileName}:`, error.message)
@@ -330,9 +305,7 @@ async function replaceTemplateInVueSFC(filePath, vueFileName = "xyz.vue") {
 async function processVueFilesInDirectory(folderPath) {
   try {
     const fileNames = await fsp.readdir(folderPath)
-    const vueFiles = fileNames.filter(
-      (fileName) => path.extname(fileName) === VUE_FILE_EXTENSION
-    )
+    const vueFiles = fileNames.filter((fileName) => path.extname(fileName) === VUE_FILE_EXTENSION)
 
     // Process Vue files
     for (const vueFile of vueFiles) {
@@ -342,10 +315,7 @@ async function processVueFilesInDirectory(folderPath) {
 
     return fileNames
   } catch (error) {
-    console.error(
-      `${COLORS.RED}Error processing Vue files:${COLORS.RESET}`,
-      error.message
-    )
+    console.error(`${COLORS.RED}Error processing Vue files:${COLORS.RESET}`, error.message)
     return []
   }
 }
@@ -379,15 +349,11 @@ export async function processAllVueFiles(folderPath) {
   await processSubdirectories(folderPath, fileNames)
 
   if (config.showLogFolders) {
-    console.log(
-      `====> Folder ${COLORS.YELLOW}${folderPath}${COLORS.RESET} has been processed.`
-    )
-    console.log(
-      `- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - `
-    )
+    console.log(`====> Folder ${COLORS.YELLOW}${folderPath}${COLORS.RESET} has been processed.`)
+    console.log(`- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - `)
   }
 }
 
 // Initialize processing
-console.log("\x1b[33mPath to project root\x1b[0m", projectRoot)
+console.log('\x1b[33mPath to project root\x1b[0m', projectRoot)
 await processAllVueFiles(projectRoot)
