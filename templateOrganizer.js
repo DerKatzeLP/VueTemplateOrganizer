@@ -203,8 +203,7 @@ function processAttribute(node, name, value) {
   } else if (name.startsWith('#')) {
     node.attribs['temp-slot'] = name.slice(1) + (value ? `="${value}"` : '')
   } else {
-    if (name.indexOf('v-else') > -1) return
-    else node.attribs[name] = value
+    node.attribs[name] = value
   }
 }
 
@@ -219,6 +218,7 @@ function applyPostProcessing(template) {
     .replace(SLOT_REGEX, (_match, p1) => `#${p1}`)
     .replace(V_SLOT_REGEX, (_match, p1) => `v-slot:${p1}`)
     .replace(QUOTE_REGEX, '"')
+    .replace(/=""/, '')
 }
 
 /**

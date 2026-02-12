@@ -4,6 +4,23 @@
   <CustomComp2 @click="testfnc"></CustomComp2>
   <p class="par">Just a simple Test</p>
   <label for="txtinput">Your input here</label>
+  <div v-if="1 == true"></div>
+  <svg
+    v-else
+    class="h-6 w-6"
+    xmlns="http://www.w3.org/2000/svg"
+    fill="none"
+    viewBox="0 0 24 24"
+    stroke="currentColor"
+    aria-hidden="true"
+  >
+    <path
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      stroke-width="2"
+      d="M6 18L18 6M6 6l12 12"
+    />
+  </svg>
   <input id="txtinput" class="input-c" type="text" ref="myRef" />
 </template>
 
