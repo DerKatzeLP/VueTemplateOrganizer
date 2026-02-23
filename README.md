@@ -24,7 +24,11 @@ npm install @derkatzelp/vuetemplateorganizer --save-dev
 ### Usage
 
 ```bash
+# Standard usage (uses cwd + vueFolderPath from config)
 npx tmp-organizer
+
+# With a custom project root path (overrides vueFolderPath from config)
+npx tmp-organizer --root /path/to/your/project
 ```
 
 ## Configuration
@@ -124,6 +128,12 @@ VueTemplateOrganizer will sort all properties by this given order.
 | `showLogFolders` | Boolean | `true`   | Enables or disables log report of touched Folders         |
 | `sortVueFiles`   | Boolean | `true`   | Enables or disables sorting of Vue SFC Files              |
 | `vueFolderPath`  | String  | `./src/` | Specifies the path to Vue SFC Files (subfolders included) |
+
+### CLI Arguments
+
+| Argument         | Type   | Description                                                                                          |
+| ---------------- | ------ | ---------------------------------------------------------------------------------------------------- |
+| `--root <path>`  | String | Overrides the project root path. If provided, `vueFolderPath` from the config will **not** be applied. Accepts both absolute and relative paths. |
 
 ## Examples
 

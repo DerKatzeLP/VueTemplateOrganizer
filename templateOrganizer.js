@@ -27,6 +27,37 @@ const COLORS = {
 }
 
 /**
+ * Parses the --root argument from CLI arguments.
+ * @returns {string|null} The provided root path or null if not specified
+ */
+function parseRootArgument() {
+  const args = process.argv.slice(2)
+  const rootIndex = args.findIndex((arg) => arg === '--root')
+  if (rootIndex !== -1 && args[rootIndex + 1]) {
+    return path.resolve(args[rootIndex + 1])
+  }
+  return null
+}
+
+/**
+ * Returns the root directory of the project.
+ * Uses --root CLI argument if provided, otherwise falls back to cwd.
+ * @returns {string} Project root path
+ */
+function getProjectRoot() {
+  const argRoot = parseRootArgument()
+  if (argRoot) return argRoot
+
+  let root = process.cwd().split('node_modules')[0]
+  return root.endsWith('/') ? root.slice(0, -1) : root
+}
+
+/**
+ * Navigate to the root directory of the project
+ */
+let projectRoot = getProjectRoot()
+
+/**
  * Initialize element attribute sorting.
  * Loads sorting configuration from sorting.tmporg.json or sorting.json.
  */
@@ -66,21 +97,9 @@ try {
   }
 }
 
-/**
- * Navigate to the root directory of the project
- */
-let projectRoot = process.cwd().split('node_modules')[0]
-if (projectRoot.endsWith('/')) {
-  projectRoot = projectRoot.slice(0, -1) + config.vueFolderPath.toString()
-}
-
-/**
- * Returns the root directory of the project.
- * @returns {string} Project root path
- */
-function getProjectRoot() {
-  let root = process.cwd().split('node_modules')[0]
-  return root.endsWith('/') ? root.slice(0, -1) : root
+// Apply vueFolderPath from config only if no --root argument was given
+if (!parseRootArgument()) {
+  projectRoot = projectRoot + config.vueFolderPath.toString()
 }
 
 /**
