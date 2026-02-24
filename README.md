@@ -1,6 +1,7 @@
 # VueTemplateOrganizer
 
-VueTemplateOrganizer is a tool that allows you to configure the sorting of template blocks in Vue Single File Components (SFCs).
+VueTemplateOrganizer is a tool that allows you to configure the sorting of template blocks in Vue Single File
+Components (SFCs).
 
 ## Features
 
@@ -23,17 +24,40 @@ npm install @derkatzelp/vuetemplateorganizer --save-dev
 
 ### Usage
 
-```bash
-# Standard usage (uses cwd + vueFolderPath from config)
-npx tmp-organizer
+### Standard usage (uses cwd + vueFolderPath from config)
 
-# With a custom project root path (overrides vueFolderPath from config)
+```bash
+npx tmp-organizer
+```
+
+### Mit einem benutzerdefinierten Projekt-Root-Pfad (überschreibt vueFolderPath aus der config)
+
+```bash
 npx tmp-organizer --root /path/to/your/project
+```
+
+### Ohne Installation: Bash-Variable
+
+```bash
+npx -p @derkatzelp/vuetemplateorganizer tmp-organizer --root "${PWD}"
+```
+
+### Ohne Installation: pwd Command Substitution
+
+```bash
+npx -p @derkatzelp/vuetemplateorganizer tmp-organizer --root "$(pwd)"
+```
+
+### Ohne Installation: Relativer Pfad
+
+```bash
+npx -p @derkatzelp/vuetemplateorganizer tmp-organizer --root .
 ```
 
 ## Configuration
 
-You can customize the sorting behavior by adjusting the configuration in `config.tmporg.json` and `sorting.tmporg.json`. <br>
+You can customize the sorting behavior by adjusting the configuration in `config.tmporg.json` and
+`sorting.tmporg.json`. <br>
 VueTemplateOrganizer will sort all properties by this given order.
 
 ### Config
@@ -123,7 +147,7 @@ VueTemplateOrganizer will sort all properties by this given order.
 ### Options
 
 | Key              | Values  | Default  | Description                                               |
-| ---------------- | ------- | -------- | --------------------------------------------------------- |
+|------------------|---------|----------|-----------------------------------------------------------|
 | `showLogFiles`   | Boolean | `true`   | Enables or disables log report of touched Files           |
 | `showLogFolders` | Boolean | `true`   | Enables or disables log report of touched Folders         |
 | `sortVueFiles`   | Boolean | `true`   | Enables or disables sorting of Vue SFC Files              |
@@ -131,22 +155,23 @@ VueTemplateOrganizer will sort all properties by this given order.
 
 ### CLI Arguments
 
-| Argument         | Type   | Description                                                                                          |
-| ---------------- | ------ | ---------------------------------------------------------------------------------------------------- |
-| `--root <path>`  | String | Overrides the project root path. If provided, `vueFolderPath` from the config will **not** be applied. Accepts both absolute and relative paths. |
+| Argument        | Type   | Description                                                                                                                                      |
+|-----------------|--------|--------------------------------------------------------------------------------------------------------------------------------------------------|
+| `--root <path>` | String | Overrides the project root path. If provided, `vueFolderPath` from the config will **not** be applied. Accepts both absolute and relative paths. |
 
 ## Examples
 
 #### Before using VueTemplateOrganizer
 
 ```html
+
 <template>
-  <h1>Test Vue File for Vue Template Organizer</h1>
-  <CustomComp class="class1" @click="testfnc" :id="comp1Id" />
-  <CustomComp2 @click="testfnc" />
-  <p class="par">Just a simple Test</p>
-  <label for="txtinput">Your input here</label>
-  <input type="text" class="input-c" id="txtinput" ref="myRef" />
+    <h1>Test Vue File for Vue Template Organizer</h1>
+    <CustomComp class="class1" @click="testfnc" :id="comp1Id"/>
+    <CustomComp2 @click="testfnc"/>
+    <p class="par">Just a simple Test</p>
+    <label for="txtinput">Your input here</label>
+    <input type="text" class="input-c" id="txtinput" ref="myRef"/>
 </template>
 ```
 
