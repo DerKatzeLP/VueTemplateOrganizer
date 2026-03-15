@@ -22,10 +22,12 @@
     />
   </svg>
   <input id="txtinput" class="input-c" type="text" ref="myRef" />
+  <h2 v-if="1 == true" id=""></h2>
+  <span class=""></span>
 </template>
 
 <script setup lang="ts">
-const comp1Id = "testID"
+const comp1Id = 'testID'
 
 const myRef = ref(null)
 
@@ -46,6 +48,7 @@ function testfnc() {
   height: 200px;
   font-size: 14px;
 }
+
 .par {
   color: blue;
 }

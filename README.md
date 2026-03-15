@@ -147,7 +147,7 @@ VueTemplateOrganizer will sort all properties by this given order.
 ### Options
 
 | Key              | Values  | Default  | Description                                               |
-|------------------|---------|----------|-----------------------------------------------------------|
+| ---------------- | ------- | -------- | --------------------------------------------------------- |
 | `showLogFiles`   | Boolean | `true`   | Enables or disables log report of touched Files           |
 | `showLogFolders` | Boolean | `true`   | Enables or disables log report of touched Folders         |
 | `sortVueFiles`   | Boolean | `true`   | Enables or disables sorting of Vue SFC Files              |
@@ -156,7 +156,7 @@ VueTemplateOrganizer will sort all properties by this given order.
 ### CLI Arguments
 
 | Argument        | Type   | Description                                                                                                                                      |
-|-----------------|--------|--------------------------------------------------------------------------------------------------------------------------------------------------|
+| --------------- | ------ | ------------------------------------------------------------------------------------------------------------------------------------------------ |
 | `--root <path>` | String | Overrides the project root path. If provided, `vueFolderPath` from the config will **not** be applied. Accepts both absolute and relative paths. |
 
 ## Examples
@@ -164,14 +164,13 @@ VueTemplateOrganizer will sort all properties by this given order.
 #### Before using VueTemplateOrganizer
 
 ```html
-
 <template>
-    <h1>Test Vue File for Vue Template Organizer</h1>
-    <CustomComp class="class1" @click="testfnc" :id="comp1Id"/>
-    <CustomComp2 @click="testfnc"/>
-    <p class="par">Just a simple Test</p>
-    <label for="txtinput">Your input here</label>
-    <input type="text" class="input-c" id="txtinput" ref="myRef"/>
+  <h1>Test Vue File for Vue Template Organizer</h1>
+  <CustomComp class="class1" @click="testfnc" :id="comp1Id" />
+  <CustomComp2 @click="testfnc" />
+  <p class="par">Just a simple Test</p>
+  <label for="txtinput">Your input here</label>
+  <input type="text" class="input-c" id="txtinput" ref="myRef" />
 </template>
 ```
 
