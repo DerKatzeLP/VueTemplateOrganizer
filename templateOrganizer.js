@@ -197,12 +197,6 @@ function sortNodeAttributes(vueFileName, node) {
 
   node.attribs = {}
   sortedAttributes.forEach(({ name, value }) => {
-    if (!value || value == '') {
-      console.log(
-        `⚠️ Deleted Key without value name: ${name} | value: ${value} in File ${vueFileName}`
-      )
-      return
-    }
     processAttribute(node, name, value)
   })
 
@@ -228,6 +222,12 @@ function processAttribute(node, name, value) {
   } else if (name.startsWith('#')) {
     node.attribs['temp-slot'] = name.slice(1) + (value ? `="${value}"` : '')
   } else {
+    if (!value || value == '') {
+      console.log(
+        `⚠️ Deleted Key without value name: ${name} | value: ${value} in File ${vueFileName}`
+      )
+      return
+    }
     node.attribs[name] = value
   }
 }
